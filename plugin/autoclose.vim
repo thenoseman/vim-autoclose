@@ -123,8 +123,10 @@ function! s:RemoveQuotes(charList, quote)
             endif
         endif
     endfor
-    for [from, to] in l:toRemove
-        call remove(a:charList, from, to)
+    for [from, rto] in l:toRemove
+      if rto < len(a:charList)  
+        call remove(a:charList, from, rto)
+      endif
     endfor
 endfunction
 
@@ -451,3 +453,4 @@ autocmd BufEnter * if mode() == 'i' | call <SID>EmptyBuffer() | endif
 command! AutoCloseOn :let b:AutoCloseOn = 1
 command! AutoCloseOff :let b:AutoCloseOn = 0
 command! AutoCloseToggle :call s:ToggleAutoClose()
+
