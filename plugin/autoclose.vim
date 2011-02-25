@@ -90,14 +90,41 @@ function! s:AllowQuote(char, isBS)
 
         if l:backSlashCount % 2
             let l:result = 0
-        else
-            if a:char == "'" && l:prev =~ '[a-zA-Z0-9]'
-                let l:result = 0
-            endif
         endif
     endif
     return l:result
 endfunction 
+
+function! s:RemoveQuotes(charList, quote)
+    let l:ignoreNext = 0
+    let l:quoteOpened = 0
+    let l:removeStart = 0
+    let l:toRemove = []
+
+    for i in range(len(a:charList))
+        if l:ignoreNext
+            let l:ignoreNext = 0
+            continue
+        endif
+
+        if a:charList[i] == '\' && b:AutoCloseSmartQuote
+            let l:ignoreNext = 1
+        elseif a:charList[i] == a:quote
+            if l:quoteOpened
+                let l:quoteOpened = 0
+                call add(l:toRemove, [l:removeStart, i])
+            else
+                let l:quoteOpened = 1
+                let l:removeStart = i
+            endif
+        endif
+    endfor
+    for [from, rto] in l:toRemove
+      if rto < len(a:charList)  
+        call remove(a:charList, from, rto)
+      endif
+    endfor
+endfunction
 
 function! s:CountQuotes(char)
     let l:currPos = col('.')-1
@@ -466,3 +493,4 @@ autocmd BufEnter * if mode() == 'i' | call <SID>EmptyBuffer() | endif
 command! AutoCloseOn :let b:AutoCloseOn = 1
 command! AutoCloseOff :let b:AutoCloseOn = 0
 command! AutoCloseToggle :call s:ToggleAutoClose()
+
