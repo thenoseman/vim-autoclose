@@ -12,7 +12,7 @@ automatically puts its  pair in front of your cursor,  and  if you continue to
 type and type  the close character,  Eclipse is smart enough  to not insert it
 again (it just move your cursor one character forward).
 
-    But the Eclipse editor don't stop  there.  If you type an "open" character
+    But the Eclipse editor doesn't stop  there.  If you type an "open" character
 on any part of your code that  should not have a pair completion,  it will not
 insert the close character for you.
 
